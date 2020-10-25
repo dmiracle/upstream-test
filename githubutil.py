@@ -15,7 +15,7 @@ class GithubUtil:
         }
         data = {"name" : name}
         r = requests.post('https://api.github.com/user/repos', headers=headers, data=json.dumps(data))
-        return(r)
+        return r.json()['clone_url']
 
     def deleteRepo(self, user, name):
         headers = {

@@ -11,11 +11,10 @@ class TestProject(unittest.TestCase):
     def test_load_config(self):
         self.yu_agent.load("config.yml")
 
-    @unittest.skip
+    # @unittest.skip
     def test_create_repo(self):
-        r = self.gh_agent.createRepo("testymctestface")
-        print(r.status_code)
-        print(r.text)
+        r = self.gh_agent.createRepo("t04")
+        print(r)
 
     @unittest.skip("This is too much power")
     def test_delete_repo(self):
@@ -29,7 +28,7 @@ class TestProject(unittest.TestCase):
         print(ec)
         print(path)
 
-    # @unittest.skip
+    @unittest.skip
     def test_change_remote(self):
         ec, path = self.gh_agent.cloneRepo('https://github.com/dmiracle/jupyter-starter.git', 'temp')
         print(ec)
