@@ -1,6 +1,7 @@
 import requests
 from decouple import config
 import json
+import os
 
 class GithubUtil:
     def __init__(self):
@@ -22,3 +23,6 @@ class GithubUtil:
         }
         r = requests.delete(f"https://api.github.com/repos/{user}/{name}", headers=headers)
         return(r)
+    def cloneRepo(self, url):
+        localDirName = "temp"
+        gitCommand = f"git clone {url}"
