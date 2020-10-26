@@ -28,3 +28,6 @@ python3 -m pip install ansible
 ## To do
 
 - add dev container branch
+- add boiler plate projects
+- dry-run mode
+- cli
