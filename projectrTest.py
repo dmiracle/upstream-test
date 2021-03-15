@@ -7,11 +7,11 @@ class TestProject(unittest.TestCase):
     yu_agent = yu.YamlUtil()
     gh_agent = gh.GithubUtil()
     
-    @unittest.skip
+    # @unittest.skip
     def test_load_config(self):
         self.yu_agent.load("config.yml")
 
-    @unittest.skip
+    # @unittest.skip
     def test_create_repo(self):
         r = self.gh_agent.createRepo("t04")
         print(r)
