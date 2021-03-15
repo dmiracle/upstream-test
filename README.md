@@ -1,5 +1,5 @@
 # Project starter
-
+Command line utility for starting projects from boilerplate repos. Something like this almost certainly already exists, idgaf.
 ## Steps
 1. create git repo
     - gitignore
