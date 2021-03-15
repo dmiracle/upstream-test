@@ -19,12 +19,6 @@ AWS_KEY_ID=<>
 AWS_SECRET_KEY=<>
 ```
 
-## Ansible
-```
-python3 -m pip install ansible
-
-```
-
 ## To do
 
 - add dev container branch
