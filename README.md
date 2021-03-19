@@ -1,5 +1,11 @@
 # Project starter
 Command line utility for starting projects from boilerplate repos. Something like this almost certainly already exists, idgaf.
+
+Imagine that it is invoked something like this 
+```
+projectr create --base=github.com/dmiracl/boiler-plate --name new-project 
+```
+
 ## Steps
 1. create git repo
     - gitignore
