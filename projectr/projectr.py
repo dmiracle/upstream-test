@@ -1,8 +1,16 @@
 import click
-import githubutil as gh
-import fileutil as fu
+import json
+from .githubutil import GithubUtil
 
+gh = GithubUtil()
+def read_templates(fname="templates.json"):
+    print("reading templates")
+    with open(fname) as json_file:
+        return json.load(json_file)
+
+test_dict = {'a':'thing 1', 'b':'thing 2'}
 @click.command()
 def cli():
-    """Simple program that greets NAME for a total of COUNT times."""
-    click.echo('Ah snap')
+    """Example script."""
+    aa = json.dumps(read_templates())
+    click.echo(f'Templates: \n{aa}')
