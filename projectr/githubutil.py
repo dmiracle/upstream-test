@@ -65,6 +65,3 @@ class GithubUtil:
         out.append(self.addRemote(project_path, new_remote))
         out.append(self.firstPush(project_path))
         return out
-
-
-        return out

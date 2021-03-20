@@ -3,7 +3,12 @@ Command line utility for starting projects from boilerplate repos. Something lik
 
 Imagine that it is invoked something like this 
 ```
-projectr create --base=github.com/dmiracl/boiler-plate --name new-project 
+projectr create --base=github.com/dmiracle/boiler-plate --name new-project 
+```
+## Install
+```
+. venv/bin/activate
+pip install -e .
 ```
 
 ## Steps
