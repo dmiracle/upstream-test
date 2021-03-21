@@ -9,10 +9,10 @@ def read_templates(fname):
         return json.load(json_file)
 
 @click.command()
-@click.argument('dir', type=click.Path())
+@click.argument('name', type=click.Path())
 @click.option('--template-file', default='templates.json', help='Name of template json file')
 @click.option('--template', default='basic', help='Name of template to use')
-def cli(dir, template_file, template):
+def cli(name, template_file, template):
     """Create new project from template"""
     templates = read_templates(template_file)
     try:
@@ -23,4 +23,19 @@ def cli(dir, template_file, template):
     except Exception as e:
         print(f"Error: {type(e)}")
         return
-    click.echo(f'repo: {template_repo} \ndir: {dir}')
+
+    try:
+        click.echo(f'Cloning repo: {template_repo} \nInto directory: {name}')
+        gh.cloneRepo(template_repo, name)
+    except:
+        print(f"Error: {type(e)}")
+        return
+
+    try:
+        click.echo(f'Creating repo: {name}')
+        res = gh.createRepo(name)
+        clone_url = res['clone_url']
+        click.echo(f'Respose: {clone_url}')
+    except Exception as e:
+        print(f"Error: {type(e)}")
+        return

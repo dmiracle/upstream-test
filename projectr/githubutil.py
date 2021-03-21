@@ -9,13 +9,17 @@ class GithubUtil:
         self.API_TOKEN = config('GITHUB_TOKEN')
 
     def createRepo(self, name):
-        headers = {
-            'Authorization': 'token ' + self.API_TOKEN,
-            'Accept': 'application/vnd.github.v3+json'
-        }
-        data = {"name" : name}
-        r = requests.post('https://api.github.com/user/repos', headers=headers, data=json.dumps(data))
-        return r.json()['clone_url']
+        try:
+            headers = {
+                'Authorization': 'token ' + self.API_TOKEN,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+            data = {"name" : name}
+            r = requests.post('https://api.github.com/user/repos', headers=headers, data=json.dumps(data))
+            return r.json()
+        except Exception as e:
+            print(f"Error: {type(e)}")
+            return
 
     def deleteRepo(self, user, name):
         headers = {
