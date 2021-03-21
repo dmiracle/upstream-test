@@ -31,11 +31,11 @@ def cli(name, template_file, template):
         print(f"Error: {type(e)}")
         return
 
-    try:
-        click.echo(f'Creating repo: {name}')
-        res = gh.createRepo(name)
-        clone_url = res['clone_url']
-        click.echo(f'Respose: {clone_url}')
-    except Exception as e:
-        print(f"Error: {type(e)}")
-        return
+    click.echo(f'Creating repo: {name}')
+    res = gh.createRepo(name)
+    clone_url = res['clone_url']
+    click.echo(f'Respose: {clone_url}')
+
+    out = gh.changeRemote(name, clone_url)
+    print(out)
+    gh.openWithCode(project_path)
