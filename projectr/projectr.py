@@ -1,8 +1,11 @@
 import click
 import json
 from .githubutil import GithubUtil
+from .fileuitl import FileUtil
 
 gh = GithubUtil()
+fu = FileUtil()
+
 def read_templates(fname):
     print("reading templates")
     with open(fname) as json_file:
@@ -14,6 +17,11 @@ def read_templates(fname):
 @click.option('--template', default='basic', help='Name of template to use')
 def cli(name, template_file, template):
     """Create new project from template"""
+    
+    if fu.checkPath(name)==True:
+        click.echo("Path already exits!")
+        return 0
+
     templates = read_templates(template_file)
     try:
         template_repo = templates[template]
