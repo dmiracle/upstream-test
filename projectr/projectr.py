@@ -59,4 +59,4 @@ def cli(name, dry_run, template_file, template):
     
     click.echo(f"Change remote: {out}")
     
-    gh.openWithCode(project_path)
+    fu.openWithCode(project_path)

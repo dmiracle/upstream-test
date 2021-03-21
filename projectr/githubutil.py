@@ -69,6 +69,3 @@ class GithubUtil:
         out.append(self.addRemote(project_path, new_remote))
         out.append(self.firstPush(project_path))
         return out
-
-    def openWithCode(self, project_path):
-        code_open = ["code", project_path]
