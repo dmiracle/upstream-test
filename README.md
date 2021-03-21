@@ -5,6 +5,13 @@ Imagine that it is invoked something like this
 ```
 projectr create --base=github.com/dmiracle/boiler-plate --name new-project 
 ```
+
+## Current Invocation
+```
+projectr my-project-name --template basic --template-file templates.json
+```
+Defaults are set for the options
+
 ## Install
 ```
 . venv/bin/activate
@@ -17,13 +24,8 @@ pip install -e .
 1. download boilerplate
 1. create and push remote
 
-## Variables
-1. repo-name
-1. description
-1. 
-
 ## Environmental Vars
-Make a `.env` file. Add your tokens
+Projectr uses `python-decouple` to deal with authentication tokens. Add `.env` to `.gitignore`. Make a `.env` file and add your tokens.
 ```
 GITHUB_TOKEN=<token>
 AWS_KEY_ID=<>
@@ -32,7 +34,8 @@ AWS_SECRET_KEY=<>
 
 ## To do
 
-- add dev container branch
-- add boiler plate projects
+- check for `project-path` and if it exists bail
+- check for existing repo and if it exits bail
+- add entry to `templates.json` from cli
 - dry-run mode
-- cli
+
