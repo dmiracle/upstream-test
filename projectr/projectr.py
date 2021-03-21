@@ -1,7 +1,7 @@
 import click
 import json
 from .githubutil import GithubUtil
-from .fileuitl import FileUtil
+from .fileutil import FileUtil
 
 gh = GithubUtil()
 fu = FileUtil()
@@ -13,9 +13,10 @@ def read_templates(fname):
 
 @click.command()
 @click.argument('name', type=click.Path())
+@click.option('--dry-run', type=click.BOOL, default=False)
 @click.option('--template-file', default='templates.json', help='Name of template json file')
 @click.option('--template', default='basic', help='Name of template to use')
-def cli(name, template_file, template):
+def cli(name, dry_run, template_file, template):
     """Create new project from template"""
     
     if fu.checkPath(name)==True:
@@ -40,10 +41,22 @@ def cli(name, template_file, template):
         return
 
     click.echo(f'Creating repo: {name}')
-    res = gh.createRepo(name)
-    clone_url = res['clone_url']
+
+    if dry_run:
+        clone_url = "dry-run-clone-url" 
+    else:
+        res = gh.createRepo(name)
+        clone_url = res['clone_url']
+    
     click.echo(f'Respose: {clone_url}')
 
-    out = gh.changeRemote(name, clone_url)
-    print(out)
+    click.echo("Update remote . . .")
+    
+    if dry_run:
+        out = "dry-run-remote-out"
+    else:
+        out = gh.changeRemote(name, clone_url)
+    
+    click.echo(f"Change remote: {out}")
+    
     gh.openWithCode(project_path)
