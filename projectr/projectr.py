@@ -33,22 +33,28 @@ def cli(name, dry_run, template_file, template):
         print(f"Error: {type(e)}")
         return
 
-    try:
-        click.echo(f'Cloning repo: {template_repo} \nInto directory: {name}')
-        gh.cloneRepo(template_repo, name)
-    except:
-        print(f"Error: {type(e)}")
-        return
+    click.echo(f'Cloning repo: {template_repo} \nInto directory: {name} . . .')
+    
+    if dry_run:
+        clone_out = "dry-run-clone-out" 
+    else:
+        clone_out = gh.cloneRepo(template_repo, name)
 
-    click.echo(f'Creating repo: {name}')
+    click.echo(f'Clone result: {clone_out}')
+
+    click.echo(f'Creating repo: {name} . . .')
 
     if dry_run:
         clone_url = "dry-run-clone-url" 
     else:
         res = gh.createRepo(name)
-        clone_url = res['clone_url']
+        if "errors" in res:
+            click.echo(f'Error response {json.dumps(res, indent=2, sort_keys=True)}')
+            return 0
+        else:
+            clone_url = res['clone_url']
     
-    click.echo(f'Respose: {clone_url}')
+    click.echo(f'Create repo respose: {clone_url}')
 
     click.echo("Update remote . . .")
     
@@ -57,6 +63,14 @@ def cli(name, dry_run, template_file, template):
     else:
         out = gh.changeRemote(name, clone_url)
     
-    click.echo(f"Change remote: {out}")
+    for o in out:
+        click.echo(f"Change remote out: {json.dumps(o, indent=2, sort_keys=True)} \n\n")
     
-    fu.openWithCode(project_path)
+    click.echo("Opening project . . .")
+
+    if dry_run:
+        out = "dry-run-open-code"
+    else:
+        out = fu.openWithCode(name)
+
+    click.echo(f"Code open out: {out}")

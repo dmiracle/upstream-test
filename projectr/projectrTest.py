@@ -1,13 +1,13 @@
 import unittest
-import githubutil as gh
-import yamlutil as yu
-import fileutil as fu
+from .githubutil import GithubUtil
+from .yamlutil import YamlUtil
+from .fileutil import FileUtil
 
 class TestProject(unittest.TestCase):
 
-    yu_agent = yu.YamlUtil()
-    gh_agent = gh.GithubUtil()
-    fi_agent = fu.FileUtil()
+    yu_agent = YamlUtil()
+    gh_agent = GithubUtil()
+    fi_agent = FileUtil()
     
     @unittest.skip
     def test_load_config(self):
