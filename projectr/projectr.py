@@ -6,34 +6,37 @@ from .fileutil import FileUtil
 gh = GithubUtil()
 fu = FileUtil()
 
-def read_templates(fname):
-    print("reading templates")
-    with open(fname) as json_file:
-        return json.load(json_file)
-
 @click.command()
 @click.argument('name', type=click.Path())
-@click.option('--dry-run', type=click.BOOL, default=False)
+@click.option('--dry-run', is_flag=True)
 @click.option('--template-file', default='templates.json', help='Name of template json file')
 @click.option('--template', default='basic', help='Name of template to use')
 def cli(name, dry_run, template_file, template):
     """Create new project from template"""
     
+    ## Do some checks to see if this is something swe should try
+
     if fu.checkPath(name)==True:
         click.echo("Path already exits!")
         return 0
+    
+    user_data = gh.getRepoData()
+    
+    if "errors" in user_data:
+        click.echo(f'Error in github connection:\n {json.dumps(user_data, indent=2, sort_keys=True)}')
+        return 0
+    else:
+        last_repo = user_data[-1]
+        click.echo(f"Authenticated user: {last_repo['owner']['login']}")
 
-    templates = read_templates(template_file)
+    templates = fu.read_templates(template_file)
     try:
         template_repo = templates[template]
     except KeyError:
         print("Key error: specified template does not exits")
-        return
-    except Exception as e:
-        print(f"Error: {type(e)}")
-        return
+        return 0
 
-    click.echo(f'Cloning repo: {template_repo} \nInto directory: {name} . . .')
+    click.echo(f'Cloning repo: {template_repo} \nInto directory: {name}/ ')
     
     if dry_run:
         clone_out = "dry-run-clone-out" 
@@ -59,12 +62,12 @@ def cli(name, dry_run, template_file, template):
     click.echo("Update remote . . .")
     
     if dry_run:
-        out = "dry-run-remote-out"
+        out = ["dry-run-remote-out"]
     else:
         out = gh.changeRemote(name, clone_url)
     
     for o in out:
-        click.echo(f"Change remote out: {json.dumps(o, indent=2, sort_keys=True)} \n\n")
+        click.echo(f"Change remote out: {o} \n")
     
     click.echo("Opening project . . .")
 

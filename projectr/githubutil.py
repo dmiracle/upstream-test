@@ -8,6 +8,18 @@ class GithubUtil:
     def __init__(self):
         self.API_TOKEN = config('GITHUB_TOKEN')
 
+    def getRepoData(self):
+        try:
+            headers = {
+                'Authorization': 'token ' + self.API_TOKEN,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+            r = requests.get('https://api.github.com/user/repos', headers=headers)
+            return r.json()
+        except Exception as e:
+            print(f"Error: {type(e)}")
+            return 
+
     def createRepo(self, name):
         try:
             headers = {
