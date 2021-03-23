@@ -9,50 +9,46 @@ class GithubUtil:
         self.API_TOKEN = config('GITHUB_TOKEN')
         self.dryrun = dryrun
 
-    def response(self, message, data):
+    def response(self, message, status, data):
         return {
             'message': message,
+            'status': status,
             'data': data
         }
 
     def getRepoData(self):
-        try:
-            headers = {
-                'Authorization': 'token ' + self.API_TOKEN,
-                'Accept': 'application/vnd.github.v3+json'
-            }
-            r = requests.get('https://api.github.com/user/repos', headers=headers)
-            if 'errors' in r:
-                message = f"Error in github connection"
-            else:
-                message = f"Authenticated user: {r.json()[-1]['owner']['login']}"
-            return self.response(message, r.json())
-        except Exception as e:
-            print(f"Error: {type(e)}: ")
-            message = print(e)
-            return self.response(message, r.json())
+        headers = {
+            'Authorization': 'token ' + self.API_TOKEN,
+            'Accept': 'application/vnd.github.v3+json'
+        }
+        r = requests.get('https://api.github.com/user/repos', headers=headers)
+        return r.status_code, r.json()
 
-    def createRepo(self, name):
-        try:
-            message = "Create remote repo . . . "
-            r = {"clone_url": "dry-run"}
-            if not self.dryrun:            
-                headers = {
-                    'Authorization': 'token ' + self.API_TOKEN,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-                data = {"name" : name}
-                r = requests.post('https://api.github.com/user/repos', headers=headers, data=json.dumps(data))
-                if 'errors' in r:
-                    message += f"\nError in github connection"
-                else:
-                    message += "\n"
-                    message += r.json()['clone_url']
-            return self.response(message, r.json)
-        except Exception as e:
-            print(f"Error: {type(e)}")
-            message = print(e)
-            return self.response(message, e)
+    def getRepoDataHandler(self):
+        status, r = self.getRepoData()
+        if 'errors' in r:
+            message = f"Error in github connection"
+        else:
+            message = f"Authenticated user: {r[-1]['owner']['login']}"
+        return self.response(message, status, r)
+
+    def createRepo(self, name):           
+        headers = {
+            'Authorization': 'token ' + self.API_TOKEN,
+            'Accept': 'application/vnd.github.v3+json'
+        }
+        data = {"name" : name}
+        r = requests.post('https://api.github.com/user/repos', headers=headers, data=json.dumps(data))
+        return r.status_code, r.json()
+
+    def createRepoHandler(self, name):       
+        status, r = self.createRepo(name)
+        if 'errors' in r:
+            message = f"\nError in github connection"
+        else:
+            message += r['clone_url']
+        return self.response(message, status, r)
+
 
     def deleteRepo(self, user, name):
         headers = {
@@ -64,12 +60,10 @@ class GithubUtil:
     
     def cloneRepo(self, url, localDirName):
         gitCommand = ["git", "clone", url, localDirName]
-        out = 'dry-run'
-        if not self.dryrun:
-            out = subprocess.run(gitCommand)
+        out = subprocess.run(gitCommand)
         repopath = os.path.abspath(localDirName)
         message = ' '.join(gitCommand)
-        return self.response(message, {'command-out': out, 'path': repopath})
+        return self.response(message, out.returncode, {'command-out': out, 'path': repopath})
 
     def getRemote(self, project_path):
         pwd = os.getcwd()

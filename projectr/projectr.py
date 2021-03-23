@@ -24,10 +24,14 @@ def cli(name, dry_run, open_with_code, verbose,  template_file, template):
         click.echo("Path already exits!")
         return 0
     
-    res = gh.getRepoData()
+    res = gh.getRepoDataHandler()
     click.echo(res['message'])
     if verbose:
         click.echo(f"{res['data']}")
+
+    if res['status'] != 200:
+        click.echo(f"Status: {res['status']}")
+        return 0
 
     templates = fu.read_templates(template_file)
     try:
@@ -52,11 +56,18 @@ def cli(name, dry_run, open_with_code, verbose,  template_file, template):
     ###################
     click.echo(f'Creating new remote: {name} . . .')
 
-    res = gh.createRepo(name)
+    res = gh.createRepoHandler(name)
     click.echo(res['message'])
     if verbose:
         click.echo(f"Create repo response {json.dumps(res['data'], indent=2, sort_keys=True)}")
+    if res['status'] != 200:
+        click.echo(f"Status: {res['status']}")
+        return 0
+    else:
+        click.echo(f"Status: {res['status']}")
+        return 1
     clone_url = res['data']['clone_url']
+
     click.echo("Attach new remote to local template . . .")
     
     res = gh.changeRemote(name, clone_url)
