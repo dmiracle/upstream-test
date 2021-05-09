@@ -44,7 +44,7 @@ class GithubUtil:
     def createRepoHandler(self, name):       
         status, r = self.createRepo(name)
         if 'errors' in r:
-            message = f"\nError in github connection"
+            message = f"\nError in github create repo                               "
         else:
             message += r['clone_url']
         return self.response(message, status, r)
