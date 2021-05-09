@@ -5,7 +5,7 @@ import subprocess
 import os
 
 class GithubUtil:
-    def __init__(self, dryrun):
+    def __init__(self, dryrun=False):
         self.API_TOKEN = config('GITHUB_TOKEN')
         self.dryrun = dryrun
 
@@ -46,7 +46,7 @@ class GithubUtil:
         if 'errors' in r:
             message = f"\nError in github create repo                               "
         else:
-            message += r['clone_url']
+            message = r['clone_url']
         return self.response(message, status, r)
 
 
